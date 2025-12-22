@@ -38,6 +38,9 @@ venv.bak/
 .env
 .env.local
 
+# Credenciais (não commitar)
+CREDENCIAIS.md
+
 # Database
 *.db
 *.sqlite
