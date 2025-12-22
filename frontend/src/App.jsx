@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useAuthStore } from './stores/authStore'
 
 // Páginas
+import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
@@ -10,6 +11,7 @@ import AgentBuilder from './pages/AgentBuilder'
 import Chat from './pages/Chat'
 import Analytics from './pages/Analytics'
 import Settings from './pages/Settings'
+import AdminPanel from './pages/AdminPanel'
 
 // Layout
 import Layout from './components/Layout'
@@ -23,10 +25,11 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         
-        <Route path="/" element={
+        <Route path="/app" element={
           <PrivateRoute>
             <Layout />
           </PrivateRoute>
@@ -38,6 +41,7 @@ function App() {
           <Route path="agents/:id/chat" element={<Chat />} />
           <Route path="analytics" element={<Analytics />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="admin" element={<AdminPanel />} />
         </Route>
       </Routes>
     </Router>

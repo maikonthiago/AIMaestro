@@ -12,7 +12,7 @@ import logging
 
 from app.config import settings
 from app.database import engine, Base
-from app.api import auth, agents, chat, rag, analytics, workflows, skills
+from app.api import auth, agents, chat, rag, analytics, workflows, skills, admin
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -92,6 +92,7 @@ app.include_router(rag.router, prefix="/api/rag", tags=["RAG"])
 app.include_router(analytics.router, prefix="/api/analytics", tags=["Analytics"])
 app.include_router(workflows.router, prefix="/api/workflows", tags=["Workflows"])
 app.include_router(skills.router, prefix="/api/skills", tags=["Skills"])
+app.include_router(admin.router, prefix="/api", tags=["Administração"])
 
 
 # Error handlers

@@ -6,17 +6,20 @@ import {
   useColorModeValue,
   Text,
 } from '@chakra-ui/react'
-import { FiHome, FiUsers, FiBarChart2, FiSettings } from 'react-icons/fi'
+import { FiHome, FiUsers, FiBarChart2, FiSettings, FiShield } from 'react-icons/fi'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useAuthStore } from '../stores/authStore'
 
 const LinkItems = [
-  { name: 'Dashboard', icon: FiHome, path: '/' },
-  { name: 'Agentes', icon: FiUsers, path: '/agents' },
-  { name: 'Analytics', icon: FiBarChart2, path: '/analytics' },
-  { name: 'Configurações', icon: FiSettings, path: '/settings' },
+  { name: 'Dashboard', icon: FiHome, path: '/app' },
+  { name: 'Agentes', icon: FiUsers, path: '/app/agents' },
+  { name: 'Analytics', icon: FiBarChart2, path: '/app/analytics' },
+  { name: 'Configurações', icon: FiSettings, path: '/app/settings' },
 ]
 
 export default function Sidebar() {
+  const { user } = useAuthStore()
+  
   return (
     <Box
       bg={useColorModeValue('white', 'gray.900')}
@@ -38,6 +41,16 @@ export default function Sidebar() {
           {link.name}
         </NavItem>
       ))}
+      
+      {/* Link do Admin - apenas para super admins */}
+      {user?.is_superadmin && (
+        <NavItem icon={FiShield} path="/app/admin">
+          Admin Panel
+        </NavItem>
+      )}
+    </Box>
+  )
+}
     </Box>
   )
 }

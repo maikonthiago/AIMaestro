@@ -17,6 +17,7 @@ class User(Base):
     full_name = Column(String)
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean, default=False)
+    is_superadmin = Column(Boolean, default=False)  # Super administrador do sistema
     plan = Column(String, default="starter")  # starter, pro, business, enterprise
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
