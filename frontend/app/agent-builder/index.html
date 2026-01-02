@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agente • AI Maestro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <div id="sidebar"></div>
+    <div class="app-content">
+      <header id="app-header" class="app-header"></header>
+      <main class="app-main">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+          <div>
+            <h1 class="h3 mb-1" id="page-title">Novo agente</h1>
+            <p class="text-muted mb-0">Defina personalidade, modelo e parâmetros</p>
+          </div>
+          <a href="/app/agents/" class="btn btn-outline-secondary">Voltar</a>
+        </div>
+
+        <div id="alert-container"></div>
+
+        <form id="agent-form">
+          <div class="card-elevated p-4 mb-4">
+            <h5 class="mb-3">Informações básicas</h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Nome do agente</label>
+                <input type="text" class="form-control" name="name" required placeholder="Assistente de vendas" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Modelo</label>
+                <select class="form-select" name="model">
+                  <option value="gpt-4">GPT-4</option>
+                  <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                  <option value="claude-3-opus">Claude 3 Opus</option>
+                  <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Descrição</label>
+                <textarea class="form-control" name="description" rows="3" placeholder="Agente especializado em..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-elevated p-4 mb-4">
+            <h5 class="mb-3">Configurações</h5>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label">Temperature</label>
+                <input type="number" step="0.1" min="0" max="2" class="form-control" name="temperature" value="0.7" />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Max tokens</label>
+                <input type="number" min="1" max="4000" class="form-control" name="max_tokens" value="1000" />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Publicado?</label>
+                <select class="form-select" name="is_published">
+                  <option value="false">Rascunho</option>
+                  <option value="true">Publicado</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-elevated p-4">
+            <h5 class="mb-3">Personalidade</h5>
+            <label class="form-label">System prompt</label>
+            <textarea class="form-control" name="system_prompt" rows="8" placeholder="Você é um assistente prestativo..."></textarea>
+          </div>
+
+          <div class="d-flex justify-content-end gap-3 mt-4">
+            <a href="/app/agents/" class="btn btn-outline-secondary">Cancelar</a>
+            <button class="btn btn-brand" type="submit" id="save-btn">Salvar agente</button>
+          </div>
+        </form>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="/assets/js/agent-builder.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

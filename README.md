@@ -2,7 +2,7 @@
 
 ![AI-Maestro](https://img.shields.io/badge/AI-Maestro-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.109-green)
-![React](https://img.shields.io/badge/React-18.2-blue)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-purple)
 ![Python](https://img.shields.io/badge/Python-3.9+-blue)
 
 ## 🚀 Sobre o Projeto
@@ -23,7 +23,7 @@ AI-Maestro é uma plataforma SaaS completa para criação e gerenciamento de age
 ## 📋 Pré-requisitos
 
 - Python 3.9+
-- Node.js 18+
+- Navegador moderno (Chrome, Edge, Firefox ou similar)
 - PostgreSQL (opcional, usa SQLite por padrão)
 - Redis (opcional)
 
@@ -51,21 +51,12 @@ cp .env.example .env
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### Frontend (React + Vite)
+### Frontend (HTML + Bootstrap + JS vanilla)
 
-```bash
-cd frontend
-
-# Instalar dependências
-npm install
-
-# Rodar o servidor de desenvolvimento
-npm run dev
-```
+O frontend passou a ser totalmente estático para reduzir dependências. Os arquivos HTML/CSS/JS ficam em `frontend/` e são servidos diretamente pelo FastAPI, portanto não é necessário instalar pacotes adicionais nem executar `npm`.
 
 Acesse:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
+- Frontend + API: http://localhost:8000
 - Documentação da API: http://localhost:8000/api/docs
 
 ## 🌍 Deploy
@@ -88,12 +79,13 @@ AIMaestro/
 │   │   └── main.py       # App principal
 │   └── requirements.txt
 ├── frontend/
-│   ├── src/
-│   │   ├── components/   # Componentes React
-│   │   ├── pages/        # Páginas
-│   │   ├── stores/       # Estado global
-│   │   └── App.jsx
-│   └── package.json
+│   ├── assets/
+│   │   ├── css/          # Estilos personalizados
+│   │   └── js/           # Módulos JavaScript (auth, layout, páginas)
+│   ├── app/              # Áreas autenticadas (dashboard, agentes, admin etc.)
+│   ├── login/            # Página de login
+│   ├── register/         # Página de registro
+│   └── index.html        # Landing page
 └── README.md
 ```
 
@@ -156,10 +148,6 @@ GOOGLE_API_KEY=your-google-key
 # Backend
 cd backend
 pytest
-
-# Frontend
-cd frontend
-npm test
 ```
 
 ## 📖 Documentação da API
@@ -188,7 +176,7 @@ Para suporte, envie um email para suporte@lobtechsolutions.com.br
 
 - OpenAI pela API GPT
 - Anthropic pela API Claude
-- Comunidade FastAPI e React
+- Comunidade FastAPI e Bootstrap
 
 ---
 

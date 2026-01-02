@@ -3,6 +3,7 @@
 from typing import List, Dict, Any, Optional
 import openai
 import anthropic
+import google.generativeai as genai
 from app.config import settings
 
 
@@ -20,6 +21,9 @@ class LLMService:
             self.anthropic_client = anthropic.Anthropic(
                 api_key=settings.ANTHROPIC_API_KEY
             )
+            
+        if settings.GOOGLE_API_KEY:
+            genai.configure(api_key=settings.GOOGLE_API_KEY)
     
     async def generate(
         self,
@@ -126,8 +130,40 @@ class LLMService:
             return "⚠️ API Key do Google não configurada. Por favor, configure GOOGLE_API_KEY no arquivo .env"
         
         try:
-            # TODO: Implementar integração com Google Gemini
-            return "⚠️ Integração com Google Gemini em desenvolvimento"
+            # Selecionar modelo
+            model_name = "gemini-pro"
+            if "vision" in self.model:
+                model_name = "gemini-pro-vision"
+                
+            model = genai.GenerativeModel(model_name)
+            
+            # Preparar prompt
+            # Gemini tem estrutura diferente, vamos simplificar concatenando
+            full_prompt = ""
+            if system_prompt:
+                full_prompt += f"System: {system_prompt}\n\n"
+            
+            for msg in messages:
+                role = msg["role"]
+                content = msg["content"]
+                if role == "user":
+                    full_prompt += f"User: {content}\n"
+                elif role == "assistant":
+                    full_prompt += f"Assistant: {content}\n"
+            
+            # Configuração
+            generation_config = genai.types.GenerationConfig(
+                temperature=temperature,
+                max_output_tokens=max_tokens
+            )
+            
+            # Gerar
+            response = model.generate_content(
+                full_prompt,
+                generation_config=generation_config
+            )
+            
+            return response.text
         
         except Exception as e:
             return f"Erro ao gerar resposta: {str(e)}"

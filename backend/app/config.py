@@ -39,6 +39,15 @@ class Settings(BaseSettings):
     
     # Multi-tenant
     DEFAULT_PLAN: str = "starter"
+
+    # Stripe
+    STRIPE_SECRET_KEY: str = ""
+    STRIPE_WEBHOOK_SECRET: str = ""
+    FRONTEND_URL: str = "http://localhost:3000"
+
+    # WhatsApp
+    WHATSAPP_TOKEN: str = ""
+    WHATSAPP_VERIFY_TOKEN: str = ""
     
     class Config:
         env_file = ".env"

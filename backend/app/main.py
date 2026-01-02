@@ -3,16 +3,18 @@ AI-Maestro - Plataforma SaaS de Agentes de IA
 Backend Principal - FastAPI
 """
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 import time
 import logging
+from pathlib import Path
 
 from app.config import settings
 from app.database import engine, Base
-from app.api import auth, agents, chat, rag, analytics, workflows, skills, admin
+from app.api import auth, agents, chat, rag, analytics, workflows, skills, admin, billing, integrations
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -50,6 +52,17 @@ app.add_middleware(
 )
 
 
+FRONTEND_DIR = Path(__file__).resolve().parents[2] / "frontend"
+
+
+def frontend_page(*path_parts: str) -> FileResponse:
+    file_path = FRONTEND_DIR.joinpath(*path_parts)
+    if not file_path.is_file():
+        logger.warning("Arquivo de front-end não encontrado: %s", file_path)
+        raise HTTPException(status_code=404, detail="Página não encontrada")
+    return FileResponse(file_path)
+
+
 # Middleware para logging de requisições
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
@@ -75,13 +88,67 @@ async def health_check():
 
 
 # Root
-@app.get("/")
-async def root():
-    return {
-        "message": "AI-Maestro API",
-        "version": "1.0.0",
-        "docs": "/api/docs"
-    }
+@app.get("/", include_in_schema=False)
+async def serve_landing():
+    return frontend_page("index.html")
+
+
+@app.get("/login", include_in_schema=False)
+@app.get("/login/", include_in_schema=False)
+async def serve_login():
+    return frontend_page("login", "index.html")
+
+
+@app.get("/register", include_in_schema=False)
+@app.get("/register/", include_in_schema=False)
+async def serve_register():
+    return frontend_page("register", "index.html")
+
+
+def _serve_app_page(*relative_path: str):
+    return frontend_page("app", *relative_path, "index.html")
+
+
+@app.get("/app", include_in_schema=False)
+@app.get("/app/", include_in_schema=False)
+async def app_dashboard():
+    return _serve_app_page()
+
+
+@app.get("/app/agents", include_in_schema=False)
+@app.get("/app/agents/", include_in_schema=False)
+async def app_agents():
+    return _serve_app_page("agents")
+
+
+@app.get("/app/agent-builder", include_in_schema=False)
+@app.get("/app/agent-builder/", include_in_schema=False)
+async def app_agent_builder():
+    return _serve_app_page("agent-builder")
+
+
+@app.get("/app/chat", include_in_schema=False)
+@app.get("/app/chat/", include_in_schema=False)
+async def app_chat():
+    return _serve_app_page("chat")
+
+
+@app.get("/app/analytics", include_in_schema=False)
+@app.get("/app/analytics/", include_in_schema=False)
+async def app_analytics():
+    return _serve_app_page("analytics")
+
+
+@app.get("/app/settings", include_in_schema=False)
+@app.get("/app/settings/", include_in_schema=False)
+async def app_settings():
+    return _serve_app_page("settings")
+
+
+@app.get("/app/admin", include_in_schema=False)
+@app.get("/app/admin/", include_in_schema=False)
+async def app_admin():
+    return _serve_app_page("admin")
 
 
 # Incluir rotas
@@ -93,6 +160,16 @@ app.include_router(analytics.router, prefix="/api/analytics", tags=["Analytics"]
 app.include_router(workflows.router, prefix="/api/workflows", tags=["Workflows"])
 app.include_router(skills.router, prefix="/api/skills", tags=["Skills"])
 app.include_router(admin.router, prefix="/api", tags=["Administração"])
+app.include_router(billing.router, prefix="/api/billing", tags=["Faturamento"])
+app.include_router(integrations.router, prefix="/api/integrations", tags=["Integrações"])
+
+
+if FRONTEND_DIR.exists():
+    assets_dir = FRONTEND_DIR / "assets"
+    if assets_dir.exists():
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+else:
+    logger.warning("Diretório do frontend não encontrado em %s", FRONTEND_DIR)
 
 
 # Error handlers

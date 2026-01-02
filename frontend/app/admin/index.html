@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel • AI Maestro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <div id="sidebar"></div>
+    <div class="app-content">
+      <header id="app-header" class="app-header"></header>
+      <main class="app-main">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+          <div>
+            <h1 class="h3 mb-1">Painel de Administração</h1>
+            <p class="text-muted mb-0">Visão geral do ambiente multi-tenant</p>
+          </div>
+        </div>
+
+        <div id="alert-container"></div>
+
+        <div class="row g-4 mb-4" id="stats-container">
+          <div class="col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon mb-3"><i class="bi bi-people"></i></div>
+              <p class="text-muted mb-1">Usuários</p>
+              <h3 class="mb-0" data-admin-stat="users">-</h3>
+              <small class="text-muted" data-admin-substat="users"></small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon mb-3"><i class="bi bi-robot"></i></div>
+              <p class="text-muted mb-1">Agentes</p>
+              <h3 class="mb-0" data-admin-stat="agents">-</h3>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon mb-3"><i class="bi bi-chat-square-text"></i></div>
+              <p class="text-muted mb-1">Mensagens</p>
+              <h3 class="mb-0" data-admin-stat="messages">-</h3>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon mb-3"><i class="bi bi-diagram-3"></i></div>
+              <p class="text-muted mb-1">Tenants</p>
+              <h3 class="mb-0" data-admin-stat="tenants">-</h3>
+            </div>
+          </div>
+        </div>
+
+        <ul class="nav nav-tabs" id="admin-tabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab">Usuários</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#agents" type="button" role="tab">Agentes</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tenants" type="button" role="tab">Tenants</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab">Atividade</button>
+          </li>
+        </ul>
+        <div class="tab-content mt-4">
+          <div class="tab-pane fade show active" id="users" role="tabpanel">
+            <div class="card-elevated p-0">
+              <div class="table-responsive">
+                <table class="table table-rounded mb-0">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Usuário</th>
+                      <th>Email</th>
+                      <th>Plano</th>
+                      <th>Status</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="users-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="agents" role="tabpanel">
+            <div class="card-elevated p-0">
+              <div class="table-responsive">
+                <table class="table table-rounded mb-0">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nome</th>
+                      <th>Modelo</th>
+                      <th>Versão</th>
+                      <th>Público</th>
+                      <th>Criado em</th>
+                    </tr>
+                  </thead>
+                  <tbody id="agents-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="tenants" role="tabpanel">
+            <div class="card-elevated p-0">
+              <div class="table-responsive">
+                <table class="table table-rounded mb-0">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nome</th>
+                      <th>Slug</th>
+                      <th>Plano</th>
+                      <th>Status</th>
+                      <th>Criado em</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tenants-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="activity" role="tabpanel">
+            <div class="row g-4" id="activity-grid"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="/assets/js/admin.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

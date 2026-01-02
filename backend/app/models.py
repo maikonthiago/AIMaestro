@@ -267,3 +267,33 @@ class ApiKey(Base):
     
     created_at = Column(DateTime, default=datetime.utcnow)
     expires_at = Column(DateTime)
+
+
+class Subscription(Base):
+    """Assinatura do usuário (Stripe)"""
+    __tablename__ = "subscriptions"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
+    stripe_customer_id = Column(String, unique=True, index=True)
+    stripe_subscription_id = Column(String, unique=True, index=True)
+    plan_id = Column(String)  # price_id do Stripe
+    status = Column(String)  # active, past_due, canceled, incomplete
+    current_period_end = Column(DateTime)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class PaymentHistory(Base):
+    """Histórico de pagamentos"""
+    __tablename__ = "payment_history"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    stripe_payment_intent_id = Column(String, unique=True)
+    amount = Column(Integer)  # em centavos
+    currency = Column(String, default="brl")
+    status = Column(String)  # succeeded, failed, pending
+    created_at = Column(DateTime, default=datetime.utcnow)
+
