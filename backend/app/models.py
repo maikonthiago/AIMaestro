@@ -34,7 +34,7 @@ class Tenant(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     slug = Column(String, unique=True, index=True, nullable=False)
-    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     plan = Column(String, default="starter")
     is_active = Column(Boolean, default=True)
     settings = Column(JSON, default={})
@@ -53,8 +53,8 @@ class Agent(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     description = Column(Text)
-    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), index=True)
     
     # Configurações do agente
     personality = Column(JSON, default={})  # tom, estilo, limites
@@ -93,7 +93,7 @@ class Conversation(Base):
     __tablename__ = "conversations"
     
     id = Column(Integer, primary_key=True, index=True)
-    agent_id = Column(Integer, ForeignKey("agents.id"), nullable=False)
+    agent_id = Column(Integer, ForeignKey("agents.id"), nullable=False, index=True)
     session_id = Column(String, unique=True, index=True, nullable=False)
     
     # Informações da conversa
@@ -120,7 +120,7 @@ class Message(Base):
     __tablename__ = "messages"
     
     id = Column(Integer, primary_key=True, index=True)
-    conversation_id = Column(Integer, ForeignKey("conversations.id"), nullable=False)
+    conversation_id = Column(Integer, ForeignKey("conversations.id"), nullable=False, index=True)
     
     # Conteúdo
     role = Column(String, nullable=False)  # user, assistant, system
@@ -144,7 +144,7 @@ class KnowledgeBase(Base):
     __tablename__ = "knowledge_bases"
     
     id = Column(Integer, primary_key=True, index=True)
-    agent_id = Column(Integer, ForeignKey("agents.id"), nullable=False)
+    agent_id = Column(Integer, ForeignKey("agents.id"), nullable=False, index=True)
     name = Column(String, nullable=False)
     description = Column(Text)
     
@@ -171,7 +171,7 @@ class Document(Base):
     __tablename__ = "documents"
     
     id = Column(Integer, primary_key=True, index=True)
-    knowledge_base_id = Column(Integer, ForeignKey("knowledge_bases.id"), nullable=False)
+    knowledge_base_id = Column(Integer, ForeignKey("knowledge_bases.id"), nullable=False, index=True)
     
     # Informações do documento
     filename = Column(String, nullable=False)
@@ -199,7 +199,7 @@ class Workflow(Base):
     __tablename__ = "workflows"
     
     id = Column(Integer, primary_key=True, index=True)
-    agent_id = Column(Integer, ForeignKey("agents.id"), nullable=False)
+    agent_id = Column(Integer, ForeignKey("agents.id"), nullable=False, index=True)
     name = Column(String, nullable=False)
     description = Column(Text)
     
@@ -252,7 +252,7 @@ class ApiKey(Base):
     __tablename__ = "api_keys"
     
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     name = Column(String, nullable=False)
     key = Column(String, unique=True, index=True, nullable=False)
     
@@ -290,7 +290,7 @@ class PaymentHistory(Base):
     __tablename__ = "payment_history"
     
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     stripe_payment_intent_id = Column(String, unique=True)
     amount = Column(Integer)  # em centavos
     currency = Column(String, default="brl")
