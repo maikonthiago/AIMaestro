@@ -34,7 +34,7 @@ class Tenant(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     slug = Column(String, unique=True, index=True, nullable=False)
-    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    owner_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
     plan = Column(String, default="starter")
     is_active = Column(Boolean, default=True)
     settings = Column(JSON, default={})
@@ -53,8 +53,8 @@ class Agent(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     description = Column(Text)
-    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    owner_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), index=True)
     
     # Configurações do agente
     personality = Column(JSON, default={})  # tom, estilo, limites
@@ -99,7 +99,7 @@ class Conversation(Base):
     # Informações da conversa
     channel = Column(String, default="webchat")  # webchat, whatsapp, telegram, api
     user_identifier = Column(String)  # phone, email, user_id
-    metadata = Column(JSON, default={})
+    meta = Column("metadata", JSON, default={})
     
     # Status
     is_active = Column(Boolean, default=True)
@@ -120,7 +120,7 @@ class Message(Base):
     __tablename__ = "messages"
     
     id = Column(Integer, primary_key=True, index=True)
-    conversation_id = Column(Integer, ForeignKey("conversations.id"), nullable=False)
+    conversation_id = Column(Integer, ForeignKey("conversations.id"), index=True, nullable=False)
     
     # Conteúdo
     role = Column(String, nullable=False)  # user, assistant, system
@@ -131,7 +131,7 @@ class Message(Base):
     tokens_used = Column(Integer, default=0)
     cost = Column(Float, default=0.0)
     latency = Column(Float)  # em segundos
-    metadata = Column(JSON, default={})
+    meta = Column("metadata", JSON, default={})
     
     created_at = Column(DateTime, default=datetime.utcnow)
     
@@ -185,7 +185,7 @@ class Document(Base):
     processing_error = Column(Text)
     
     # Metadados
-    metadata = Column(JSON, default={})
+    meta = Column("metadata", JSON, default={})
     
     created_at = Column(DateTime, default=datetime.utcnow)
     processed_at = Column(DateTime)
