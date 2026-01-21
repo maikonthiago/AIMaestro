@@ -49,7 +49,7 @@ async def chat(
             session_id=session_id,
             channel=chat_data.metadata.get("channel", "webchat"),
             user_identifier=chat_data.metadata.get("user_identifier"),
-            metadata=chat_data.metadata
+            meta_data=chat_data.metadata
         )
         db.add(conversation)
         db.commit()
