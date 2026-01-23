@@ -189,7 +189,23 @@ async def list_documents(
         Document.knowledge_base_id == kb_id
     ).all()
     
-    return documents
+    return [
+        {
+            "id": doc.id,
+            "knowledge_base_id": doc.knowledge_base_id,
+            "filename": doc.filename,
+            "file_path": doc.file_path,
+            "file_type": doc.file_type,
+            "file_size": doc.file_size,
+            "is_processed": doc.is_processed,
+            "chunks_count": doc.chunks_count,
+            "processing_error": doc.processing_error,
+            "metadata": doc.meta,
+            "created_at": doc.created_at,
+            "processed_at": doc.processed_at
+        }
+        for doc in documents
+    ]
 
 
 @router.delete("/documents/{document_id}", status_code=status.HTTP_204_NO_CONTENT)
