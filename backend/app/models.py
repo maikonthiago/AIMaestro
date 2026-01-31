@@ -99,7 +99,7 @@ class Conversation(Base):
     # Informações da conversa
     channel = Column(String, default="webchat")  # webchat, whatsapp, telegram, api
     user_identifier = Column(String)  # phone, email, user_id
-    metadata = Column(JSON, default={})
+    meta = Column("metadata", JSON, default={})
     
     # Status
     is_active = Column(Boolean, default=True)
@@ -120,7 +120,7 @@ class Message(Base):
     __tablename__ = "messages"
     
     id = Column(Integer, primary_key=True, index=True)
-    conversation_id = Column(Integer, ForeignKey("conversations.id"), nullable=False)
+    conversation_id = Column(Integer, ForeignKey("conversations.id"), nullable=False, index=True)
     
     # Conteúdo
     role = Column(String, nullable=False)  # user, assistant, system
@@ -131,7 +131,7 @@ class Message(Base):
     tokens_used = Column(Integer, default=0)
     cost = Column(Float, default=0.0)
     latency = Column(Float)  # em segundos
-    metadata = Column(JSON, default={})
+    meta = Column("metadata", JSON, default={})
     
     created_at = Column(DateTime, default=datetime.utcnow)
     
@@ -185,7 +185,7 @@ class Document(Base):
     processing_error = Column(Text)
     
     # Metadados
-    metadata = Column(JSON, default={})
+    meta = Column("metadata", JSON, default={})
     
     created_at = Column(DateTime, default=datetime.utcnow)
     processed_at = Column(DateTime)
