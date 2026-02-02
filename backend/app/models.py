@@ -6,6 +6,10 @@ from datetime import datetime
 from app.database import Base
 
 
+# Performance Optimization:
+# Foreign keys have index=True to improve query performance on joins and filtering.
+# JSON columns named "metadata" are mapped to attribute "meta" to avoid conflict with Base.metadata.
+
 class User(Base):
     """Usuário do sistema"""
     __tablename__ = "users"
@@ -34,7 +38,7 @@ class Tenant(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     slug = Column(String, unique=True, index=True, nullable=False)
-    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     plan = Column(String, default="starter")
     is_active = Column(Boolean, default=True)
     settings = Column(JSON, default={})
@@ -53,8 +57,8 @@ class Agent(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     description = Column(Text)
-    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), index=True)
     
     # Configurações do agente
     personality = Column(JSON, default={})  # tom, estilo, limites
@@ -93,13 +97,13 @@ class Conversation(Base):
     __tablename__ = "conversations"
     
     id = Column(Integer, primary_key=True, index=True)
-    agent_id = Column(Integer, ForeignKey("agents.id"), nullable=False)
+    agent_id = Column(Integer, ForeignKey("agents.id"), nullable=False, index=True)
     session_id = Column(String, unique=True, index=True, nullable=False)
     
     # Informações da conversa
     channel = Column(String, default="webchat")  # webchat, whatsapp, telegram, api
     user_identifier = Column(String)  # phone, email, user_id
-    metadata = Column(JSON, default={})
+    meta = Column("metadata", JSON, default={})
     
     # Status
     is_active = Column(Boolean, default=True)
@@ -120,7 +124,7 @@ class Message(Base):
     __tablename__ = "messages"
     
     id = Column(Integer, primary_key=True, index=True)
-    conversation_id = Column(Integer, ForeignKey("conversations.id"), nullable=False)
+    conversation_id = Column(Integer, ForeignKey("conversations.id"), nullable=False, index=True)
     
     # Conteúdo
     role = Column(String, nullable=False)  # user, assistant, system
@@ -131,7 +135,7 @@ class Message(Base):
     tokens_used = Column(Integer, default=0)
     cost = Column(Float, default=0.0)
     latency = Column(Float)  # em segundos
-    metadata = Column(JSON, default={})
+    meta = Column("metadata", JSON, default={})
     
     created_at = Column(DateTime, default=datetime.utcnow)
     
@@ -144,7 +148,7 @@ class KnowledgeBase(Base):
     __tablename__ = "knowledge_bases"
     
     id = Column(Integer, primary_key=True, index=True)
-    agent_id = Column(Integer, ForeignKey("agents.id"), nullable=False)
+    agent_id = Column(Integer, ForeignKey("agents.id"), nullable=False, index=True)
     name = Column(String, nullable=False)
     description = Column(Text)
     
@@ -171,7 +175,7 @@ class Document(Base):
     __tablename__ = "documents"
     
     id = Column(Integer, primary_key=True, index=True)
-    knowledge_base_id = Column(Integer, ForeignKey("knowledge_bases.id"), nullable=False)
+    knowledge_base_id = Column(Integer, ForeignKey("knowledge_bases.id"), nullable=False, index=True)
     
     # Informações do documento
     filename = Column(String, nullable=False)
@@ -185,7 +189,7 @@ class Document(Base):
     processing_error = Column(Text)
     
     # Metadados
-    metadata = Column(JSON, default={})
+    meta = Column("metadata", JSON, default={})
     
     created_at = Column(DateTime, default=datetime.utcnow)
     processed_at = Column(DateTime)
@@ -199,7 +203,7 @@ class Workflow(Base):
     __tablename__ = "workflows"
     
     id = Column(Integer, primary_key=True, index=True)
-    agent_id = Column(Integer, ForeignKey("agents.id"), nullable=False)
+    agent_id = Column(Integer, ForeignKey("agents.id"), nullable=False, index=True)
     name = Column(String, nullable=False)
     description = Column(Text)
     
@@ -252,7 +256,7 @@ class ApiKey(Base):
     __tablename__ = "api_keys"
     
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     name = Column(String, nullable=False)
     key = Column(String, unique=True, index=True, nullable=False)
     
@@ -290,7 +294,7 @@ class PaymentHistory(Base):
     __tablename__ = "payment_history"
     
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     stripe_payment_intent_id = Column(String, unique=True)
     amount = Column(Integer)  # em centavos
     currency = Column(String, default="brl")
